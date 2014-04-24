@@ -3,7 +3,6 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <winsock2.h>
 #include "net.h"
 #include "bitcoinrpc.h"
 

@@ -1,11 +1,11 @@
 # Copyright (c) 2009-2010 Satoshi Nakamoto
-# Copyright (c) 2013-2014 helpcoin Developers
+# Copyright (c) 2013-2014 Dogecoin Developers
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 # Makefile for the MinGW g++ compiler/toolchain
 #
-# Assumes Berkeley DB, Boost, and OpenSSL have all been compiled and installed 
+# Assumes Berkeley DB, Boost, and OpenSSL have all been compiled and installed
 # into /usr/local (/usr/local/include, /usr/local/lib).
 #
 # If dependencies are somewhere else, run 'make DEPSDIR=/path/'
@@ -21,8 +21,8 @@ CXX ?= g++
 USE_UPNP:=-
 USE_IPV6:=1
 
-DEPSDIR?=c:/deps/boost_1_53_0 c:/deps/openssl-1.0.1e/
-BOOST_SUFFIX?=-mgw48-mt-sd-1_53
+DEPSDIR?=/usr/local
+BOOST_SUFFIX?=-mgw46-mt-sd-1_52
 
 INCLUDEPATHS= \
  -I"$(CURDIR)" \
@@ -40,7 +40,7 @@ LIBS= \
  -l boost_program_options$(BOOST_SUFFIX) \
  -l boost_thread$(BOOST_SUFFIX) \
  -l boost_chrono$(BOOST_SUFFIX) \
- -l db_cxx-4.8 \
+ -l db_cxx \
  -l ssl \
  -l crypto
 
@@ -110,10 +110,10 @@ OBJS_SSE2= obj/scrypt-sse2.o
 OBJS += $(OBJS_SSE2)
 endif
 
-all: helpcoind.exe
+all: dogecoind.exe
 
-test check: test_helpcoin.exe FORCE
-	test_helpcoin.exe
+test check: test_dogecoin.exe FORCE
+	test_dogecoin.exe
 
 #
 # LevelDB support
@@ -130,7 +130,7 @@ obj/%-sse2.o: %-sse2.cpp
 obj/%.o: %.cpp $(HEADERS)
 	$(CXX) -c $(CFLAGS) -o $@ $<
 
-helpcoind.exe: $(OBJS:obj/%=obj/%)
+dogecoind.exe: $(OBJS:obj/%=obj/%)
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
 TESTOBJS := $(patsubst test/%.cpp,obj-test/%.o,$(wildcard test/*.cpp))
@@ -138,11 +138,11 @@ TESTOBJS := $(patsubst test/%.cpp,obj-test/%.o,$(wildcard test/*.cpp))
 obj-test/%.o: test/%.cpp $(HEADERS)
 	$(CXX) -c $(TESTDEFS) $(CFLAGS) -o $@ $<
 
-test_helpcoin.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
+test_dogecoin.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ -lboost_unit_test_framework$(BOOST_SUFFIX) $(LIBS)
 
 clean:
-	rm -f helpcoind.exe test_helpcoin.exe
+	rm -f dogecoind.exe test_dogecoin.exe
 	rm -f obj/*
 	rm -f obj-test/*
 	cd leveldb && $(MAKE) TARGET_OS=NATIVE_WINDOWS clean && cd ..
